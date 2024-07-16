@@ -2,68 +2,28 @@ name: Deploy to Azure VM
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Copy files to VM
-        uses: appleboy/scp-action@master
-        with:
-          host: 13.71.103.226  # Replace with your Azure VM IP address
-          username: ${{ secrets.azureuser }}  # Replace with your Azure VM username
-          key: ${{ secrets.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 }}  # Your SSH private key stored in GitHub Secrets
-          source: "app.py"  # Source file to copy
-          target: "/home/azureuser/flask-hello-world"  # Destination path on your Azure VM
+    - name: Copy files to VM
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "app.py"
+        target: "/home/azureuser/flask-hello-world"
 
-      - name: Execute remote commands
-        uses: appleboy/ssh-action@master
-        with:
-          host: 13.71.103.226  # Replace with your Azure VM IP address
-          username: ${{ secrets.USERNAME }}  # Replace with your Azure VM username
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your SSH private key stored in GitHub Secrets
-          script: |
-            sudo systemctl restart flask-app.service  # Example command to restart your Flask app service on the VM
+    - name: Execute remote commands
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          sudo systemctl restart flask-app.service
