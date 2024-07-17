@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 name: Deploy to VM
 
 on:
   push:
     branches: [ main ]  # Adjust this if your primary branch has a different name
+=======
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches: [ main ]
+>>>>>>> origin/main
 
 jobs:
   deploy:
@@ -10,6 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+<<<<<<< HEAD
     - name: Install SSH key
       uses: shimataro/ssh-key-action@v2
       with:
@@ -25,3 +34,22 @@ jobs:
           pip install -r requirements.txt
           sudo systemctl restart flask-app
         EOFx
+=======
+    - name: Copy files to VM
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        source: "app.py"
+        target: "/home/azureuser/flask-hello-world"
+
+    - name: Execute remote commands
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        script: |
+          sudo systemctl restart flask-app.service
+>>>>>>> origin/main
