@@ -1,0 +1,27 @@
+name: Deploy to VM
+
+on:
+  push:
+    branches: [ main ]  # Adjust this if your primary branch has a different name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.VM_SSH_PRIVATE_KEY }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+    - name: Deploy to VM
+      run: |
+        ssh azureuser@${{ secrets.VM_IP_ADDRESS }} 'bash -s' << EOF
+          cd ~/flask-hello-world
+          git pull origin main
+          source venv/bin/activate
+          pip install -r requirements.txt
+          sudo systemctl restart flask-app
+        EOF
